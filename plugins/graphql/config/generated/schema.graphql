@@ -1,3 +1,11 @@
+input createNoticiasInput {
+  data: NoticiasInput
+}
+
+type createNoticiasPayload {
+  noticia: Noticias
+}
+
 input createPostInput {
   data: PostInput
 }
@@ -34,6 +42,14 @@ type createUserPayload {
 The `DateTime` scalar represents a date and time following the ISO 8601 standard
 """
 scalar DateTime
+
+input deleteNoticiasInput {
+  where: InputID
+}
+
+type deleteNoticiasPayload {
+  noticia: Noticias
+}
 
 input deletePostInput {
   where: InputID
@@ -89,9 +105,12 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON
 
-union Morph = UsersPermissionsMe | UsersPermissionsMeRole | Post | createPostPayload | updatePostPayload | deletePostPayload | PostConnection | PostAggregator | PostGroupBy | PostConnection_id | PostConnectionCreatedAt | PostConnectionUpdatedAt | PostConnectionTitle | PostConnectionContent | PostConnectionCover | Tag | createTagPayload | updateTagPayload | deleteTagPayload | TagConnection | TagAggregator | TagGroupBy | TagConnection_id | TagConnectionCreatedAt | TagConnectionUpdatedAt | TagConnectionName | UploadFile | UploadFileConnection | UploadFileAggregator | UploadFileGroupBy | UploadFileConnection_id | UploadFileConnectionCreatedAt | UploadFileConnectionUpdatedAt | UploadFileConnectionName | UploadFileConnectionHash | UploadFileConnectionSha256 | UploadFileConnectionExt | UploadFileConnectionMime | UploadFileConnectionSize | UploadFileConnectionUrl | UploadFileConnectionProvider | UploadFileConnectionPublic_id | UsersPermissionsPermission | UsersPermissionsRole | createRolePayload | updateRolePayload | deleteRolePayload | UsersPermissionsRoleConnection | UsersPermissionsRoleAggregator | UsersPermissionsRoleGroupBy | UsersPermissionsRoleConnection_id | UsersPermissionsRoleConnectionName | UsersPermissionsRoleConnectionDescription | UsersPermissionsRoleConnectionType | UsersPermissionsUser | createUserPayload | updateUserPayload | deleteUserPayload | UsersPermissionsUserConnection | UsersPermissionsUserAggregator | UsersPermissionsUserGroupBy | UsersPermissionsUserConnection_id | UsersPermissionsUserConnectionUsername | UsersPermissionsUserConnectionEmail | UsersPermissionsUserConnectionProvider | UsersPermissionsUserConnectionConfirmed | UsersPermissionsUserConnectionBlocked | UsersPermissionsUserConnectionRole
+union Morph = UsersPermissionsMe | UsersPermissionsMeRole | Noticias | createNoticiasPayload | updateNoticiasPayload | deleteNoticiasPayload | NoticiasConnection | NoticiasAggregator | NoticiasGroupBy | NoticiasConnection_id | NoticiasConnectionCreatedAt | NoticiasConnectionUpdatedAt | NoticiasConnectionTitulo | NoticiasConnectionDescripcion | NoticiasConnectionImagenes | Post | createPostPayload | updatePostPayload | deletePostPayload | PostConnection | PostAggregator | PostGroupBy | PostConnection_id | PostConnectionCreatedAt | PostConnectionUpdatedAt | PostConnectionTitle | PostConnectionContent | PostConnectionCover | Tag | createTagPayload | updateTagPayload | deleteTagPayload | TagConnection | TagAggregator | TagGroupBy | TagConnection_id | TagConnectionCreatedAt | TagConnectionUpdatedAt | TagConnectionName | UploadFile | UploadFileConnection | UploadFileAggregator | UploadFileGroupBy | UploadFileConnection_id | UploadFileConnectionCreatedAt | UploadFileConnectionUpdatedAt | UploadFileConnectionName | UploadFileConnectionHash | UploadFileConnectionSha256 | UploadFileConnectionExt | UploadFileConnectionMime | UploadFileConnectionSize | UploadFileConnectionUrl | UploadFileConnectionProvider | UploadFileConnectionPublic_id | UsersPermissionsPermission | UsersPermissionsRole | createRolePayload | updateRolePayload | deleteRolePayload | UsersPermissionsRoleConnection | UsersPermissionsRoleAggregator | UsersPermissionsRoleGroupBy | UsersPermissionsRoleConnection_id | UsersPermissionsRoleConnectionName | UsersPermissionsRoleConnectionDescription | UsersPermissionsRoleConnectionType | UsersPermissionsUser | createUserPayload | updateUserPayload | deleteUserPayload | UsersPermissionsUserConnection | UsersPermissionsUserAggregator | UsersPermissionsUserGroupBy | UsersPermissionsUserConnection_id | UsersPermissionsUserConnectionUsername | UsersPermissionsUserConnectionEmail | UsersPermissionsUserConnectionProvider | UsersPermissionsUserConnectionConfirmed | UsersPermissionsUserConnectionBlocked | UsersPermissionsUserConnectionRole
 
 type Mutation {
+  createNoticias(input: createNoticiasInput): createNoticiasPayload
+  updateNoticias(input: updateNoticiasInput): updateNoticiasPayload
+  deleteNoticias(input: deleteNoticiasInput): deleteNoticiasPayload
   createPost(input: createPostInput): createPostPayload
   updatePost(input: updatePostInput): updatePostPayload
   deletePost(input: deletePostInput): deletePostPayload
@@ -111,6 +130,70 @@ type Mutation {
   updateUser(input: updateUserInput): updateUserPayload
   deleteUser(input: deleteUserInput): deleteUserPayload
   upload(refId: ID, ref: String, source: String, file: Upload!): UploadFile!
+}
+
+type Noticias {
+  _id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  titulo: String
+  descripcion: String
+  imagenes: UploadFile
+}
+
+type NoticiasAggregator {
+  count: Int
+}
+
+type NoticiasConnection {
+  values: [Noticias]
+  groupBy: NoticiasGroupBy
+  aggregate: NoticiasAggregator
+}
+
+type NoticiasConnection_id {
+  key: ID
+  connection: NoticiasConnection
+}
+
+type NoticiasConnectionCreatedAt {
+  key: DateTime
+  connection: NoticiasConnection
+}
+
+type NoticiasConnectionDescripcion {
+  key: String
+  connection: NoticiasConnection
+}
+
+type NoticiasConnectionImagenes {
+  key: ID
+  connection: NoticiasConnection
+}
+
+type NoticiasConnectionTitulo {
+  key: String
+  connection: NoticiasConnection
+}
+
+type NoticiasConnectionUpdatedAt {
+  key: DateTime
+  connection: NoticiasConnection
+}
+
+type NoticiasGroupBy {
+  _id: [NoticiasConnection_id]
+  createdAt: [NoticiasConnectionCreatedAt]
+  updatedAt: [NoticiasConnectionUpdatedAt]
+  titulo: [NoticiasConnectionTitulo]
+  descripcion: [NoticiasConnectionDescripcion]
+  imagenes: [NoticiasConnectionImagenes]
+}
+
+input NoticiasInput {
+  titulo: String
+  descripcion: String
+  imagenes: ID
 }
 
 type Post {
@@ -180,6 +263,9 @@ input PostInput {
 }
 
 type Query {
+  noticia(id: ID!): Noticias
+  noticias(sort: String, limit: Int, start: Int, where: JSON): [Noticias]
+  noticiasConnection(sort: String, limit: Int, start: Int, where: JSON): NoticiasConnection
   post(id: ID!): Post
   posts(sort: String, limit: Int, start: Int, where: JSON): [Post]
   postsConnection(sort: String, limit: Int, start: Int, where: JSON): PostConnection
@@ -257,6 +343,15 @@ type TagGroupBy {
 input TagInput {
   name: String
   posts: [ID]
+}
+
+input updateNoticiasInput {
+  where: InputID
+  data: NoticiasInput
+}
+
+type updateNoticiasPayload {
+  noticia: Noticias
 }
 
 input updatePostInput {
