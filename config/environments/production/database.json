@@ -5,7 +5,7 @@
       "connector": "strapi-hook-mongoose",
       "settings": {
         "client": "mongo",
-        "uri": "${process.env.DATABASE_URI || 'mongodb://heroku_nmv7ms83:8gqan5o39t9g374no4numjdnbc@ds159110.mlab.com:59110/heroku_nmv7ms83'}",
+        "uri": "${process.env.DATABASE_URI || 'mongodb://fintuucms:7hhYYbG4JOobTOIi@cluster0.jlyek.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'}",
         "host": "${process.env.DATABASE_HOST || '127.0.0.1'}",
         "port": "${process.env.DATABASE_PORT || 27017}",
         "database": "${process.env.DATABASE_NAME || ''}",
